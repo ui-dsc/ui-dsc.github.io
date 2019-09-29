@@ -1,6 +1,7 @@
 'use strict'
 
 const browserSync = require('browser-sync').create();
+const del = require('del');
 const gulp = require('gulp');
 const cleanCss = require('gulp-clean-css');
 const sourcemaps = require('gulp-sourcemaps');
@@ -27,6 +28,10 @@ function browserSyncTask(done) {
     port: 8080
   });
   done();
+}
+
+function clean() {
+  return del([".dist/"]);
 }
 
 function images() {
@@ -107,6 +112,9 @@ function watchFiles() {
   gulp.watch(paths.images, images);
 };
 
-exports.build = gulp.parallel(js, css, html, images, sw, vendor, manifest);
+exports.build = gulp.series(
+  clean,
+  gulp.parallel(js, css, html, images, sw, vendor, manifest)
+);
 
 exports.watch = gulp.parallel(watchFiles, browserSyncTask);
