@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/ui-dsc/website.git"
+    "url": "git+https://github.com/ui-dsc/ui-dsc.github.io.git"
   },
   "keywords": [
     "dsc",
@@ -20,9 +20,9 @@
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/ui-dsc/website/issues"
+    "url": "https://github.com/ui-dsc/ui-dsc.github.io/issues"
   },
-  "homepage": "https://github.com/ui-dsc/website/#readme",
+  "homepage": "https://github.com/ui-dsc/ui-dsc.github.io",
   "devDependencies": {
     "browser-sync": "^2.26.7",
     "del": "^5.1.0",
