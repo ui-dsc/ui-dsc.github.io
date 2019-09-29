@@ -1,7 +1,7 @@
 {
-  "name": "vibranium",
-  "version": "1.0.0",
-  "description": "Website for DSC SubSaharan Africa",
+  "name": "dsc-ui-website",
+  "version": "0.1.0",
+  "description": "Website for DSC Universitas Indonesia",
   "main": "gulpfile.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
@@ -10,22 +10,23 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/kelvinkamau/Vibranium.git"
+    "url": "git+https://github.com/ui-dsc/website.git"
   },
   "keywords": [
     "dsc",
-    "unilag"
+    "universitas indonesia",
+    "indonesia"
   ],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/kelvinkamau/Vibranium/issues"
+    "url": "https://github.com/ui-dsc/website/issues"
   },
-  "homepage": "https://github.com/kelvinkamau/Vibranium/#readme",
+  "homepage": "https://github.com/ui-dsc/website/#readme",
   "devDependencies": {
+    "browser-sync": "^2.26.7",
     "gulp": "^4.0.2",
     "gulp-clean-css": "^4.2.0",
-    "gulp-connect": "^5.7.0",
     "gulp-htmlmin": "^5.0.1",
     "gulp-imagemin": "^6.0.0",
     "gulp-sourcemaps": "^2.6.5",

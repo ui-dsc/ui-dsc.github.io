@@ -1,109 +1,112 @@
 'use strict'
 
-const gulp          = require('gulp');
-const css          = require('gulp-clean-css');
-const sourcemaps    = require('gulp-sourcemaps');
-const connect       = require('gulp-connect');
-const htmlmin       = require('gulp-htmlmin');
-const uglify        = require('gulp-uglify-es').default;
+const browserSync = require('browser-sync').create();
+const gulp = require('gulp');
+const cleanCss = require('gulp-clean-css');
+const sourcemaps = require('gulp-sourcemaps');
+const htmlmin = require('gulp-htmlmin');
+const uglify = require('gulp-uglify-es').default;
+const imagemin = require('gulp-imagemin');
 
+const ROOT = 'dist/';
 const paths = {
   html: 'src/*.html',
   css: 'src/css/**/*.css',
-  script: 'src/js/**/*.js',
+  js: 'src/js/**/*.js',
   sw: 'src/service-worker.js',
   images: 'src/images/**',
   vendor: 'src/js/vendors/*.js',
   manifest: 'src/manifest.json'
 };
 
-const imagemin = require('gulp-imagemin');
- 
-const imagesGulp = function() {
-  return gulp.src(paths.images)
+function browserSyncTask(done) {
+  browserSync.init({
+    server: {
+      baseDir: "./dist/"
+    },
+    port: 8080
+  });
+  done();
+}
+
+function images() {
+  return gulp
+    .src(paths.images)
     .pipe(imagemin([
       imagemin.gifsicle({interlaced: true}),
       imagemin.jpegtran({progressive: true}),
       imagemin.optipng({optimizationLevel: 5}),
       imagemin.svgo({
           plugins: [
-              {removeViewBox: true},
-              {cleanupIDs: false}
+            {removeViewBox: true},
+            {cleanupIDs: false}
           ]
-      })
-    ]))
-    .pipe(gulp.dest('dist/images'));
+        })
+      ])
+    )
+    .pipe(gulp.dest(ROOT + 'images'));
 };
 
-const gulpCss = function() {
-  return gulp.src(paths.css)
+function css() {
+  return gulp
+    .src(paths.css)
     .pipe(sourcemaps.init())
-    .pipe(css())
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('dist/css'));
+    .pipe(cleanCss())
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest(ROOT + 'css'))
+    .pipe(browserSync.stream());
 };
 
-const jsGulp = function() {
-  return gulp.src(paths.script, {
-      ignore: [paths.sw, paths.vendor]
-    })
+function js() {
+  return gulp
+    .src(paths.js, {ignore: [paths.sw, paths.vendor]})
     .pipe(sourcemaps.init())
     .pipe(uglify())
-    .pipe(sourcemaps.write('.'))
-    .pipe(gulp.dest('dist/js'));
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest(ROOT + 'js'))
+    .pipe(browserSync.stream());
 };
 
-const copyManifest = function() {
-  return gulp.src(paths.manifest)
-      .pipe(gulp.dest('./'))
+function manifest() {
+  return gulp
+    .src(paths.manifest)
+    .pipe(gulp.dest(ROOT))
+    .pipe(browserSync.stream());
 };
 
-const swGulp = function() {
-  return gulp.src(paths.sw)
+function sw() {
+  return gulp
+    .src(paths.sw)
     .pipe(uglify())
-    .pipe(gulp.dest('./'));
+    .pipe(gulp.dest(ROOT))
+    .pipe(browserSync.stream());
 };
 
-const vendorGulp = function() {
-  return gulp.src(paths.vendor)
+function vendor() {
+  return gulp
+    .src(paths.vendor)
     .pipe(uglify())
-    .pipe(gulp.dest('./dist/js/vendors'))
+    .pipe(gulp.dest(ROOT + '/js/vendors'))
+    .pipe(browserSync.stream());
 };
 
-const htmlGulp = function() {
+function html() {
   return gulp.src(paths.html)
     .pipe(htmlmin({
       collapseWhitespace: true,
       removeComments: true
     }))
-    .pipe(gulp.dest('./'));
+    .pipe(gulp.dest(ROOT))
+    .pipe(browserSync.stream());
 };
 
-const watchJS = function() {
-  return gulp.watch(paths.script, gulp.series(jsGulp, reload));
+function watchFiles() {
+  gulp.watch(paths.js, js);
+  gulp.watch(paths.css, css);
+  gulp.watch(paths.html, html);
+  gulp.watch(paths.images, images);
 };
 
-const watchCSS = function() {
-  return gulp.watch(paths.css, gulp.series(gulpCss, reload));
-};
+exports.build = gulp.parallel(js, css, html, images, sw, vendor, manifest);
 
-const watchHTML = function() {
-  return gulp.watch(paths.html, gulp.series(htmlGulp, reload));
-};
-
-const server = function() {
-  return connect.server({livereload: true});
-};
-
-const reload = function() {
-  return gulp.src(paths.html).pipe(connect.reload());
-};
-
-const watch = gulp.parallel(
-  watchCSS, watchJS, watchHTML
-);
-
-
-exports.build = gulp.parallel(imagesGulp, jsGulp, gulpCss, htmlGulp, swGulp, vendorGulp, copyManifest);
-
-exports.watch = gulp.parallel(server, watch);
+exports.watch = gulp.parallel(watchFiles, browserSyncTask);
