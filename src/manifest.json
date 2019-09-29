@@ -3,9 +3,9 @@
   "display": "standalone",
   "orientation":"portrait",
   "theme_color": "#2F5BE7",
-  "short_name": "DSC Kisii",
-  "name": "DSC Kisii University",
-  "description": "Developer Student Clubs is a Google Developers program for university students to learn mobile and web development skills",
+  "short_name": "DSC UI",
+  "name": "DSC Universitas Indonesia",
+  "description": "Developer Student Clubs is a Google Developers program for university students to learn together and use technology to solve real life problems.",
   "lang": "en-US",
   "icons": [
     {
