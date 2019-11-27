@@ -23,7 +23,7 @@ const paths = {
 function browserSyncTask(done) {
   browserSync.init({
     server: {
-      baseDir: "./dist/"
+      baseDir: "./src/"
     },
     port: 8080
   });
